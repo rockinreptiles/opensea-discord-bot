@@ -42,6 +42,11 @@ async function main() {
   const channel = await discordSetup();
   const seconds = process.env.SECONDS ? parseInt(process.env.SECONDS) : 3_600;
   const hoursAgo = (Math.round(new Date().getTime() / 1000) - (seconds)); // in the last hour, run hourly?
+
+  const floorResponse = await fetch("https://api.opensea.io/api/v1/collections?asset_owner=0xA095884445297E804096c5bc02349588a97830ab&offset=0&limit=1").then((resp) => resp.json());
+
+  const test = floorResponse.stats.floor_price;
+  console.log(test);
   
   const params = new URLSearchParams({
     offset: '0',
@@ -59,17 +64,14 @@ async function main() {
   const openSeaResponse = await fetch(
     "https://api.opensea.io/api/v1/events?" + params).then((resp) => resp.json());
     
-  await Promise.all(
+  return await Promise.all(
     openSeaResponse?.asset_events?.reverse().map(async (sale: any) => {
       const message = buildMessage(sale);
       channel.send(message)
     })
   );   
 
-  const floorResponse = await fetch("https://api.opensea.io/api/v1/collections?asset_owner=0xA095884445297E804096c5bc02349588a97830ab&offset=0&limit=1").then((resp) => resp.json());
 
-  const test = floorResponse.stats.floor_price;
-  console.log(test);
   
   //console.log(floorResponse);  
   //return await Promise.all(
