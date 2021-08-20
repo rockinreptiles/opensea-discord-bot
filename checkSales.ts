@@ -17,7 +17,16 @@ const  discordSetup = async (): Promise<TextChannel> => {
       const channel = await discordBot.channels.fetch(process.env.DISCORD_CHANNEL_ID!);
       resolve(channel as TextChannel);
     });
+    discordBot.on('message', msg => {
+      if(msg.content === '!floor') {
+        getFloor();
+      }
+    });
   })
+}
+
+async function getFloor() {
+
 }
 
 const buildMessage = (sale: any) => (
@@ -43,6 +52,8 @@ async function main() {
   const seconds = process.env.SECONDS ? parseInt(process.env.SECONDS) : 3_600;
   const hoursAgo = (Math.round(new Date().getTime() / 1000) - (seconds)); // in the last hour, run hourly?
   
+  const floorChannel = await discordBot.channels.fetch(process.env.FLOOR_CHANNEL_ID!);
+  
   const params = new URLSearchParams({
     offset: '0',
     limit: '1',
@@ -64,7 +75,17 @@ async function main() {
       const message = buildMessage(sale);
       return channel.send(message)
     })
-  );   
+  );
+  const floorResponse = await fetch(
+    "https://api.opensea.io/api/v1/collections?asset_owner=0xA095884445297E804096c5bc02349588a97830ab").then((resp) => resp.json());
+    
+  return await Promise.all(
+    floorResponse?.stats?.reverse().map(async (floor_price: any) => {
+      //const message = buildMessage(sale);
+      return channel.setName('floor-'+floor_price);
+    })
+  );
+  
 }
 
 main()
