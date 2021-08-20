@@ -44,7 +44,7 @@ async function main() {
   const hoursAgo = (Math.round(new Date().getTime() / 1000) - (seconds)); // in the last hour, run hourly?
 
   const floorResponse = await fetch("https://api.opensea.io/api/v1/collections?asset_owner=0xA095884445297E804096c5bc02349588a97830ab&offset=0&limit=1").then((resp) => resp.json());
-
+  console.log(floorResponse);
   const test = floorResponse.stats.floor_price;
   console.log(test);
   
