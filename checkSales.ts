@@ -66,10 +66,10 @@ async function main() {
     })
   );   
 
-  const floorResponse = await fetch("https://api.opensea.io/api/v1/collections?asset_owner=0xA095884445297E804096c5bc02349588a97830ab").then((resp) => resp.json());
-    
+  const floorResponse = await fetch("https://api.opensea.io/api/v1/collections?asset_owner=0xA095884445297E804096c5bc02349588a97830ab&offset=0&limit=1").then((resp) => resp.json());
+  console.log(floorResponse);  
   return await Promise.all(
-    floorResponse?.stats?.reverse().map(async (floor_price: any) => {
+    floorResponse.stats?.reverse().map(async (floor_price: any) => {
       //const message = buildMessage(sale);
       return channel.setName('floor-'+floor_price);
     })
