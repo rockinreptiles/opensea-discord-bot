@@ -52,7 +52,7 @@ async function main() {
   
 
   const floorResponse = await fetch("https://api.opensea.io/api/v1/collections?asset_owner=0xA095884445297E804096c5bc02349588a97830ab&offset=0&limit=1").then((resp) => resp.json());
-  floorChannel.setName('floor-'+ floorResponse[0].stats.floor_price+' ETH');
+  floorChannel.send('The current floor of Rockin Reptiles is '+ floorResponse[0].stats.floor_price+' ETH');
   //const resp = JSON.parse(floorResponse);
  //console.log(floorResponse);
   console.log(floorResponse[0].stats.floor_price)
